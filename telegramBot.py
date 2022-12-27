@@ -1,22 +1,34 @@
+#https://my.telegram.org/apps
+#Instagram syscursos
+#Telegram t.me/syscursos
 
-
-from discord_easy_commands import EasyBot
+from telethon import TelegramClient, events
+import apiData
+from datetime import datetime
 import pyjokes
-import discord
+
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+joke = pyjokes.get_joke(language='es', category='all')
 
 
+client = TelegramClient('session', apiData.api_id, apiData.api_hash)
 
+@client.on(events.NewMessage(chats=apiData.chatName))
 
-token = 'MTA1NzI0NTk4ODg2MDk4NTM2NQ.Ghh62y.kccHOicG-49JhKfQODLoNtnGRoEaEyeolIZ46M'
+async def my_event_handler(event):
 
+  respuesta = answer(event.text)
+  print(event.text)
+  await client.send_message(apiData.chatName, respuesta)
 
-joke = pyjokes.get_jokes(language='es', category='all')
-intents = discord.Intents.all()
-bot = EasyBot(intents = intents)
+def answer(word):
+      
+  if word == '/broma':
+      return joke
+  
+  if word == '/hora':
+      return current_time
 
-
-bot.setCommand('!youtube', 'www.youtube.com')
-bot.setCommand('!instagram','syscursos')
-bot.setCommand('!chiste', joke)
-
-bot.run(token)
+client.start()
+client.run_until_disconnected()
