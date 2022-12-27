@@ -1,38 +1,30 @@
-#https://my.telegram.org/apps
-#Instagram syscursos
-#Telegram t.me/syscursos
+from twitchio.ext import commands
 
-from telethon import TelegramClient, events
-from datetime import datetime
-import pyjokes
+bot = commands.Bot(
+    irc_token = 'oauth:lj374iqbdcicw7e4u42w8y7jyor6fw',
+    client_id = 'xz5i1gursaam6acar7bv1vj0wgcpdd',
+    nick = 'syslasigb',
+    prefix = '!',
+    initial_channels = ['syslasigb']
 
-
-api_id = 15209149
-api_hash = '7016b258a72b41bd7047d7cb8f4ac3f7'
-chatName = '@syscursos'
-
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-joke = pyjokes.get_joke(language='es', category='all')
+)
 
 
-client = TelegramClient('session', api_id, api_hash)
+@bot.event
+async def event_ready():
+    print('Estamos listos')
 
-@client.on(events.NewMessage(chats=chatName))
 
-async def my_event_handler(event):
+@bot.command(name='horario')
+async def horario(ctx):
+    await ctx.send(f'Buenas, {ctx.author.name} mi horario es X')
 
-  respuesta = answer(event.text)
-  print(event.text)
-  await client.send_message(chatName, respuesta)
+@bot.event
+async def event_message(ctx):
 
-def answer(word):
-      
-  if word == '/broma':
-      return joke
-  
-  if word == '/hora':
-      return current_time
+    await bot.handle_commands(ctx)
 
-client.start()
-client.run_until_disconnected()
+    if 'crack' == ctx.content.lower():
+        await ctx.channel.send(f'Tu si quieres un crack {ctx.author.name}')
+
+bot.run()
